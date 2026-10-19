@@ -9,23 +9,34 @@ import router from "./server/assets-router.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import express from "express";
+import contactRouter from "./routes/contact.routes.js";
+import qualificationRouter from "./routes/qualification.routes.js";
+import projectRouter from "./routes/project.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 
 import dotenv from "dotenv";
 
 dotenv.config();
 
+app.use(cors());
+app.use(express.json());
+app.use("/api/contacts", contactRouter);
+app.use("/api/qualifications", qualificationRouter);
+app.use("/api/projects", projectRouter);
+app.use("/api/users", userRouter);
+
 
 //const assetsRouter = require("./server/assets-router");
-app.use("/src", router);
-app.use("/", function (req, res) {
- res.send("Welcome to User application");
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to My Portfolio application."
+  });
 });
 
 //module.exports = app;
 
-app.use(cors());
-app.use(express.json());
+
 
 const PORT = process.env.PORT || 5000;
 

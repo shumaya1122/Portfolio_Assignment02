@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import * as controller from '../controllers/user.controller.js';
+import * as controller from '../controllers/contact.controller.js';
 
 router.get('/', controller.findAll);        // GET api/contacts
 router.get('/:id', controller.findOne);     // GET api/contacts/:id

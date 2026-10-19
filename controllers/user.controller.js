@@ -1,11 +1,16 @@
 import User from '../models/user.model.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 import jwt from 'jsonwebtoken';
 
 // POST api/users – add new user
 export const create = async (req, res) => {
   try {
+    if (!req.body.name || !req.body.email || !req.body.password) {
+  return res.status(400).json({
+    message: 'Name, email and password are required'
+  });
+}
     const hashed = await bcrypt.hash(req.body.password, 10);
     const user = new User({ ...req.body, password: hashed });
     const saved = await user.save();
@@ -74,6 +79,17 @@ export const deleteAll = async (req, res) => {
 // POST api/users/signin
 export const signin = async (req, res) => {
   try {
+    if (!req.body.email || !req.body.password) {
+  return res.status(400).json({
+    message: 'Email and password are required'
+  });
+}
+
+if (!process.env.JWT_SECRET) {
+  return res.status(500).json({
+    message: 'JWT_SECRET is not configured'
+  });
+}
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(401).json({ message: 'Invalid email or password' });
     const isMatch = await bcrypt.compare(req.body.password, user.password);
